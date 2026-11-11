@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🎄 Intercambio de Pijamas Pachoncitas | Navidad $300 MXN</title>
+  <meta name="description" content="Regístrate en nuestro Intercambio Navideño de Pijamas Pachoncitas ($300 MXN). Anota tu talla, color o estampado favorito y obtén tu token." />
+  <meta property="og:title" content="🎄 Intercambio de Pijamas Pachoncitas ($300 MXN)" />
+  <meta property="og:description" content="Suaves, calientitas y con mucho espíritu navideño: ¡regístrate y descubre quién te toca este lunes 16 de noviembre!" />
+  <meta property="og:image" content="assets/hero-pijamas.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated Snowflakes Background -->
+  <div class="snow-container" id="snowContainer" aria-hidden="true"></div>
+
+  <main class="mobile-shell">
+    <!-- Hero Card -->
+    <section class="hero-card">
+      <div class="hero-image-wrapper">
+        <img src="assets/hero-pijamas.jpg" alt="Pijamas Pachoncitas de Navidad" />
+        <div class="hero-image-overlay">
+          <div class="badge-row">
+            <span class="pill-badge gold">🧸 Presupuesto: $300 MXN</span>
+            <span class="pill-badge">👥 12 - 13 Personas</span>
+          </div>
+          <h1 class="hero-title">Intercambio de Pijamas Pachoncitas</h1>
+        </div>
+      </div>
+
+      <div class="hero-body">
+        <p class="hero-phrase" id="heroPhrase">
+          “Suaves, calientitas y con mucho espíritu navideño: ¡regala el abrazo más pachoncito de esta Navidad!”
+        </p>
+
+        <!-- Visual inspiration cards -->
+        <div class="pijama-gallery">
+          <div class="gallery-item">
+            <span class="gallery-emoji">🧸</span>
+            <span class="gallery-caption">Polar y Peluche</span>
+          </div>
+          <div class="gallery-item">
+            <span class="gallery-emoji">🦌</span>
+            <span class="gallery-caption">Estampado Navideño</span>
+          </div>
+          <div class="gallery-item">
+            <span class="gallery-emoji">🧣</span>
+            <span class="gallery-caption">Cuadros y Franela</span>
+          </div>
+        </div>
+
+        <!-- Live Progress Counter -->
+        <div class="progress-box">
+          <div class="progress-header">
+            <span>🎄 Participantes registrados</span>
+            <span id="progressCountText">0 de 13</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressBarFill"></div>
+          </div>
+          <p class="progress-subtext" id="progressSubtext">
+            Cuando los 12-13 participantes se registren se realizará el sorteo. Resultados: <strong>Lunes 16 de noviembre</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Invitation Link Banner -->
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" class="video-banner" id="videoInvitationTopLink">
+      <div class="video-banner-left">
+        <div class="play-circle">▶</div>
+        <div>
+          <span class="video-banner-title">Ver Video de la Invitación</span>
+          <span class="video-banner-sub">Conoce todos los detalles de nuestra posada / intercambio</span>
+        </div>
+      </div>
+      <span class="video-banner-arrow">↗</span>
+    </a>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" aria-label="Secciones del intercambio">
+      <button type="button" class="tab-btn active" id="tabRegisterBtn" onclick="switchTab('register')">
+        ✍️ Registrarme
+      </button>
+      <button type="button" class="tab-btn" id="tabLookupBtn" onclick="switchTab('lookup')">
+        🎁 ¿Quién me tocó?
+      </button>
+    </nav>
+
+    <!-- TAB 1: REGISTRATION FORM -->
+    <section class="content-card" id="sectionRegister">
+      <div id="registerFormContainer">
+        <h2 class="section-title">Anótate al Intercambio</h2>
+        <p class="section-subtitle">
+          Llena tus datos para que tu Amigo Secreto elija tu pijama pachoncita ideal (presupuesto <strong>$300 MXN</strong>). Al finalizar recibirás tu <strong>Token secreto</strong>.
+        </p>
+
+        <form id="registrationForm" onsubmit="handleRegistrationSubmit(event)">
+          <!-- Nombre -->
+          <div class="form-group">
+            <label class="form-label" for="inputNombre">
+              1. Tu Nombre o Apodo <span class="req">*</span>
+            </label>
+            <input
+              type="text"
+              id="inputNombre"
+              class="form-input"
+              placeholder="Ej. María Bastida"
+              required
+              autocomplete="name"
+            />
+          </div>
+
+          <!-- Talla -->
+          <div class="form-group">
+            <label class="form-label">
+              2. Tu Talla de Pijama <span class="req">*</span>
+            </label>
+            <div class="size-grid" id="sizePillsContainer">
+              <button type="button" class="size-pill" onclick="selectSize('CH (S)')">CH (S)</button>
+              <button type="button" class="size-pill selected" onclick="selectSize('M')">M</button>
+              <button type="button" class="size-pill" onclick="selectSize('G (L)')">G (L)</button>
+              <button type="button" class="size-pill" onclick="selectSize('XG (XL)')">XG (XL)</button>
+              <button type="button" class="size-pill" onclick="selectSize('Unitalla')">Unitalla</button>
+            </div>
+            <input
+              type="text"
+              id="inputTallaDetalle"
+              class="form-input"
+              value="M"
+              placeholder="O especifica ej. M (30-32) / Pantalón G y Blusa M"
+              required
+            />
+          </div>
+
+          <!-- Color y/o Estampado favorito -->
+          <div class="form-group">
+            <label class="form-label" for="inputEstampado">
+              3. Color y/o Estampado Favorito <span class="req">*</span>
+            </label>
+            <textarea
+              id="inputEstampado"
+              class="form-textarea"
+              rows="2"
+              placeholder="Ej. Color vino o verde pino, estampado de cuadros navideños, ositos o polar liso..."
+              required
+            ></textarea>
+            <div class="chip-list">
+              <button type="button" class="suggestion-chip" onclick="appendChip('Cuadros navideños rojos')">+ Cuadros navideños</button>
+              <button type="button" class="suggestion-chip" onclick="appendChip('Ositos / Renos')">+ Ositos / Renos</button>
+              <button type="button" class="suggestion-chip" onclick="appendChip('Polar liso pastel')">+ Polar liso pastel</button>
+              <button type="button" class="suggestion-chip" onclick="appendChip('Verde pino o Vino')">+ Verde pino / Vino</button>
+              <button type="button" class="suggestion-chip" onclick="appendChip('Personajes (Grinch/Snoopy)')">+ Grinch / Snoopy</button>
+            </div>
+          </div>
+
+          <!-- Medio de contacto -->
+          <div class="form-group">
+            <label class="form-label" for="inputContacto">
+              4. Medio de Contacto (para enviarte quién te tocó) <span class="req">*</span>
+            </label>
+            <div class="contact-type-row">
+              <button type="button" class="contact-type-btn active" id="btnTypeWhatsapp" onclick="setContactType('whatsapp')">
+                📱 WhatsApp (10 dígitos)
+              </button>
+              <button type="button" class="contact-type-btn" id="btnTypeEmail" onclick="setContactType('email')">
+                ✉️ Correo Electrónico
+              </button>
+            </div>
+            <input
+              type="tel"
+              id="inputContacto"
+              class="form-input"
+              placeholder="Ej. 5512345678"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-primary" id="submitBtn">
+            🎄 Registrarme y Obtener mi Token
+          </button>
+        </form>
+      </div>
+
+      <!-- Post-Registration Token Confirmation View -->
+      <div id="tokenConfirmationView" class="hidden">
+        <div style="text-align:center; font-size:2.4rem; margin-bottom:4px;">🎉🧸🎄</div>
+        <h2 class="section-title" style="text-align:center;">¡Ya estás en el Intercambio!</h2>
+        <p class="section-subtitle" style="text-align:center; margin-bottom:10px;">
+          Hola <strong id="confirmUserName"></strong>, guarda muy bien tu código secreto:
+        </p>
+
+        <div class="token-card">
+          <span class="token-label">Tu Token Personal de Consulta</span>
+          <div class="token-value" id="generatedTokenDisplay">PIJAMA-0000</div>
+          <button type="button" class="btn-secondary" onclick="copyTokenToClipboard()" style="margin-top:8px;">
+            📋 Copiar mi Token
+          </button>
+        </div>
+
+        <div class="notice-card">
+          <strong>⏳ ¿Qué sigue ahora?</strong><br />
+          Por favor <strong>espera a que todos los participantes (12 a 13 personas) terminen de contestar</strong>.<br /><br />
+          📲 En cuanto esté completo el registro, <strong>recibirás la información de quién te toca en tu medio de contacto proporcionado</strong> (<span id="confirmUserContact"></span>).<br /><br />
+          📅 También podrás consultarlo aquí mismo el día <strong>lunes 16 de noviembre</strong> ingresando tu <strong>Nombre</strong> y tu <strong>Token</strong> en la pestaña <em>“¿Quién me tocó?”</em>.
+        </div>
+
+        <div class="action-stack">
+          <a href="#" id="saveTokenSelfWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn-primary btn-whatsapp" style="text-decoration:none;">
+            💬 Guardarme mi Token en mi WhatsApp
+          </a>
+          <button type="button" class="btn-secondary" onclick="switchTab('lookup')">
+            🔍 Ir a la pestaña de Consulta (Lunes 16 Nov)
+          </button>
+          <button type="button" class="btn-secondary" onclick="resetRegistrationView()" style="border-color:#d1d5db; color:#6b7280;">
+            ➕ Registrar a otra persona desde este celular
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: LOOKUP RESULT (LUNES 16 DE NOVIEMBRE) -->
+    <section class="content-card hidden" id="sectionLookup">
+      <h2 class="section-title">Descubre quién te tocó 🎁</h2>
+      <p class="section-subtitle">
+        Consulta disponible a partir del <strong>lunes 16 de noviembre</strong> (o en cuanto todos hayan contestado). Ingresa tu <strong>Nombre</strong> y el <strong>Token</strong> que te dimos al registrarte.
+      </p>
+
+      <form id="lookupForm" onsubmit="handleLookupSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="lookupNombre">Tu Nombre <span class="req">*</span></label>
+          <input
+            type="text"
+            id="lookupNombre"
+            class="form-input"
+            placeholder="Ej. María Bastida"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="lookupToken">Tu Token Secreto <span class="req">*</span></label>
+          <input
+            type="text"
+            id="lookupToken"
+            class="form-input"
+            placeholder="Ej. PIJAMA-4829"
+            style="text-transform:uppercase; font-family:monospace; font-weight:700;"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn-primary">
+          ✨ Consultar mi Intercambio
+        </button>
+      </form>
+
+      <!-- Waiting message if draw hasn't happened yet -->
+      <div id="lookupPendingNotice" class="notice-card hidden" style="margin-top:18px;">
+        <strong>🎄 ¡Hola <span id="pendingUserName"></span>! Tu Token es válido.</strong><br />
+        Todavía estamos esperando a que terminen de registrarse todos los participantes (<strong id="pendingCountStatus"></strong>).<br /><br />
+        Recibirás un mensaje en tu medio de contacto en cuanto se cierre el registro, o vuelve a consultar aquí el <strong>lunes 16 de noviembre</strong>.
+      </div>
+
+      <!-- Result Card when Draw is Ready -->
+      <div id="lookupResultContainer" class="hidden" style="margin-top:20px;">
+        <div class="reveal-card">
+          <span class="pill-badge gold">🤫 ¡Es un secreto navideño!</span>
+          <p style="font-size:0.88rem; opacity:0.9; margin-top:10px;">
+            En el Intercambio de Pijamas Pachoncitas te toca regalarle a:
+          </p>
+          <h3 class="reveal-target-name" id="resultTargetName">Nombre Persona</h3>
+
+          <div class="specs-grid">
+            <div class="spec-box">
+              <span class="spec-label">📏 Talla de Pijama</span>
+              <span class="spec-val" id="resultTargetSize">M</span>
+            </div>
+            <div class="spec-box">
+              <span class="spec-label">🏷️ Presupuesto</span>
+              <span class="spec-val">$300 MXN</span>
+            </div>
+            <div class="spec-box full">
+              <span class="spec-label">🎨 Color y/o Estampado Favorito</span>
+              <span class="spec-val" id="resultTargetPattern">Cuadros navideños</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reminder & Calendar Actions -->
+        <h4 style="font-size:0.92rem; color:var(--pine-green); margin-bottom:6px;">
+          📲 Guarda tu recordatorio para que no se te olvide:
+        </h4>
+        <div class="action-stack">
+          <a href="#" id="btnSelfWhatsappReminder" target="_blank" rel="noopener noreferrer" class="btn-primary btn-whatsapp" style="text-decoration:none;">
+            💬 Mandarme los datos a mi WhatsApp
+          </a>
+          <a href="#" id="btnGoogleCalendar" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            📅 Agregar a mi Google Calendar
+          </a>
+          <button type="button" class="btn-secondary" onclick="downloadICSFile()">
+            🍎 Agregar a Calendario (iPhone / Outlook .ics)
+          </button>
+          <a href="#" id="btnSelfEmailReminder" class="btn-secondary">
+            ✉️ Mandarme recordatorio por Correo
+          </a>
+          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" class="video-banner" id="videoInvitationResultLink" style="margin-top:8px; margin-bottom:0;">
+            <div class="video-banner-left">
+              <div class="play-circle">🎥</div>
+              <div>
+                <span class="video-banner-title">Ver Video de la Invitación</span>
+                <span class="video-banner-sub">Repasa la fecha, lugar y dinámica del intercambio</span>
+              </div>
+            </div>
+            <span class="video-banner-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer & Organizer Admin Panel -->
+    <footer class="site-footer">
+      <p>🎄 Intercambio Navideño de Pijamas Pachoncitas • $300 MXN</p>
+      <button type="button" class="admin-link" onclick="toggleAdminPanel()">
+        🔒 Panel de Organizador (Ver BD / Realizar Sorteo / Exportar JSON)
+      </button>
+    </footer>
+
+    <!-- ORGANIZER ADMIN PANEL (Protected by PIN) -->
+    <section class="admin-panel hidden" id="adminPanel">
+      <h3 style="color:var(--pine-green); font-size:1.05rem; margin-bottom:6px;">
+        🛠️ Panel de Base de Datos y Sorteo
+      </h3>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
+        Aquí puedes ver la base de datos recolectada (<code>bd_intercambio.json</code>), realizar el sorteo entre los 12-13 participantes y descargar el archivo para el script de WhatsApp.
+      </p>
+
+      <div class="action-stack" style="margin-bottom:14px;">
+        <button type="button" class="btn-primary" onclick="runSecretSantaDraw()">
+          🎲 Realizar / Actualizar Sorteo Ahora
+        </button>
+        <button type="button" class="btn-secondary" onclick="downloadDatabaseJSON()">
+          💾 Descargar Base de Datos (bd_intercambio.json)
+        </button>
+        <button type="button" class="btn-secondary" onclick="downloadDatabaseCSV()">
+          📊 Descargar Tabla para Excel (.csv)
+        </button>
+        <button type="button" class="btn-secondary" onclick="loadDemoParticipants()">
+          🧪 Cargar 12 Participantes de Prueba (Demo)
+        </button>
+      </div>
+
+      <!-- Editable Config for Video URL & Event Date -->
+      <details style="margin-bottom:12px; font-size:0.82rem; background:#f9fafb; padding:10px; border-radius:10px; border:1px solid #e5e7eb;">
+        <summary style="font-weight:700; cursor:pointer; color:var(--pine-green);">
+          ⚙️ Configurar Link del Video, Fecha y Cloud Sync
+        </summary>
+        <div style="margin-top:10px;">
+          <label class="form-label">Link del Video de Invitación:</label>
+          <input type="url" id="adminVideoUrl" class="form-input" style="margin-bottom:8px;" />
+          <label class="form-label">Fecha y Hora del Intercambio (Texto):</label>
+          <input type="text" id="adminEventDateText" class="form-input" style="margin-bottom:8px;" />
+          <label class="form-label">Lugar del Intercambio:</label>
+          <input type="text" id="adminEventLocation" class="form-input" style="margin-bottom:8px;" />
+          <button type="button" class="btn-secondary" onclick="saveEventSettings()">
+            ✅ Guardar Configuración
+          </button>
+        </div>
+      </details>
+
+      <div id="adminParticipantsList" style="max-height:320px; overflow-y:auto; border-top:1px solid #e5e7eb; padding-top:8px;"></div>
+    </section>
+  </main>
+
+  <div id="toastNotification" class="toast hidden">Mensaje</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

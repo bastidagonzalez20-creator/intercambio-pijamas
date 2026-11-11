@@ -1,0 +1,20 @@
+{
+  "evento": {
+    "titulo": "Intercambio Navideño de Pijamas Pachoncitas",
+    "frase": "Suaves, calientitas y con mucho espíritu navideño: ¡regala el abrazo más pachoncito de esta Navidad!",
+    "presupuesto_mxn": 300,
+    "min_participantes": 12,
+    "max_participantes": 13,
+    "fecha_revelacion": "2026-11-16",
+    "fecha_evento_iso": "2026-12-19T20:00:00",
+    "fecha_evento_fin_iso": "2026-12-19T23:59:00",
+    "fecha_evento_texto": "Sábado 19 de Diciembre de 2026, 8:00 PM",
+    "lugar_evento": "Casa sede del Intercambio Navideño",
+    "video_invitacion_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "sitio_web_url": "https://maria-bastida.github.io/intercambio-pijamas/",
+    "sorteo_realizado": false,
+    "fecha_sorteo": null,
+    "admin_pin": "1225"
+  },
+  "participantes": []
+}
