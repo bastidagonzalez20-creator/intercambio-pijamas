@@ -696,6 +696,18 @@ async function loadDemoParticipants() {
   showToast('🧪 12 participantes de prueba cargados y sorteo listo.');
 }
 
+async function clearAllParticipants() {
+  if (!confirm('¿Estás segura de que quieres borrar TODOS los participantes (incluidos los de prueba) y reiniciar la lista a 0?')) {
+    return;
+  }
+  dbState.participantes = [];
+  dbState.evento.sorteo_realizado = false;
+  dbState.evento.fecha_sorteo = null;
+  localStorage.removeItem(STORAGE_KEY);
+  await saveDatabase();
+  showToast('🗑️ Se borraron todos los participantes. Lista en 0 de 13.');
+}
+
 function showToast(msg) {
   const toast = document.getElementById('toastNotification');
   toast.textContent = msg;
