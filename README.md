@@ -14,7 +14,7 @@ Tienes **3 formas directas** de ver y administrar la base de datos de tus partic
    - `bd_intercambio_pijamas.csv`: Se genera automáticamente cada vez que alguien se registra o cuando lo descargas desde el panel del sitio, listo para abrirse con doble clic en **Excel**.
 3. **Panel de Organizador dentro del mismo Sitio Móvil**:
    - En la parte inferior de la página web haz clic en **`🔒 Panel de Organizador`**.
-   - Ingresa el PIN por defecto: **`1225`**.
+   - Ingresa el PIN por defecto.
    - Ahí verás en vivo la lista de registrados, podrás presionar **`🎲 Realizar / Actualizar Sorteo Ahora`**, editar el link del video de invitación y descargar la base de datos actualizada en `.json` o `.csv`.
 
 ---

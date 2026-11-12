@@ -10,18 +10,18 @@ let dbState = {
     titulo: 'Intercambio Navideño de Pijamas Pachoncitas',
     frase: '“Suaves, calientitas y con mucho espíritu navideño: ¡regala el abrazo más pachoncito de esta Navidad!”',
     presupuesto_mxn: 300,
-    min_participantes: 12,
-    max_participantes: 13,
+    min_participantes: 13,
+    max_participantes: 14,
     fecha_revelacion: '2026-11-16',
     fecha_evento_iso: '20261219T200000',
     fecha_evento_fin_iso: '20261219T235900',
-    fecha_evento_texto: 'Sábado 19 de Diciembre de 2026, 8:00 PM',
+    fecha_evento_texto: 'Jueves 24 de Diciembre de 2026, 5:00 PM',
     lugar_evento: 'Casa sede del Intercambio Navideño',
     video_invitacion_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     sitio_web_url: window.location.href.split('#')[0],
     sorteo_realizado: false,
     fecha_sorteo: null,
-    admin_pin: '1225'
+    admin_pin: '11235'
   },
   participantes: []
 };
@@ -535,9 +535,9 @@ function performDerangementDraw() {
 function toggleAdminPanel() {
   const panel = document.getElementById('adminPanel');
   if (!adminUnlocked) {
-    const pin = prompt('Ingresa el PIN de organizador (por defecto: 1225):', '1225');
-    if (pin !== (dbState.evento.admin_pin || '1225')) {
-      showToast('PIN incorrecto');
+    const pin = prompt('Ingresa el PIN de organizador:');
+    if (pin !== (dbState.evento.admin_pin)) {
+      showToast('No seas tramposo 😤 ');
       return;
     }
     adminUnlocked = true;
@@ -567,7 +567,7 @@ async function saveEventSettings() {
   dbState.evento.fecha_evento_texto = document.getElementById('adminEventDateText').value.trim();
   dbState.evento.lugar_evento = document.getElementById('adminEventLocation').value.trim();
   await saveDatabase();
-  showToast('Configuración del evento guardada ✅');
+  showToast('Configuración del evento guardada');
 }
 
 function renderAdminList() {
