@@ -316,22 +316,24 @@ function showTokenConfirmation(participant) {
   document.getElementById('lookupToken').value = participant.token;
 
   // Configurar botón para guardarse el Token en su propio WhatsApp
+  // Usamos emojis del plano BMP (✨, ⛄, ❄️, ⭐, ❤️, ✔️, ▶️) y api.whatsapp.com
+  // para evitar el bug de wa.me en Windows/Web que reemplaza emojis de 4 bytes por ""
   const selfWaBtn = document.getElementById('saveTokenSelfWhatsappBtn');
   const msg =
-    `🎄 *Mi Registro al Intercambio de Pijamas Pachoncitas ($300 MXN)* 🧸\n\n` +
-    `👤 *Nombre:* ${participant.nombre}\n` +
-    `🔑 *Mi Token Secreto:* ${participant.token}\n` +
-    `📏 *Mi Talla:* ${participant.talla}\n` +
-    `🎨 *Color/Estampado pedido:* ${participant.color_estampado}\n\n` +
-    `📅 *Consulta de resultados:* Lunes 16 de noviembre\n` +
-    `🔗 *Sitio web:* ${window.location.href.split('#')[0]}\n` +
-    `🎥 *Video de la invitación:* ${dbState.evento.video_invitacion_url}`;
+    `✨ *Mi Registro al Intercambio de Pijamas Pachoncitas ($300 MXN)* ⛄\n\n` +
+    `⭐ *Nombre:* ${participant.nombre}\n` +
+    `✔️ *Mi Token Secreto:* ${participant.token}\n` +
+    `➜ *Mi Talla:* ${participant.talla}\n` +
+    `❤️ *Color/Estampado pedido:* ${participant.color_estampado}\n\n` +
+    `❄️ *Consulta de resultados:* Lunes 16 de noviembre\n` +
+    `▶️ *Sitio web:* ${window.location.href.split('#')[0]}\n` +
+    `▶️ *Video de la invitación:* ${dbState.evento.video_invitacion_url}`;
 
   const phoneDigits = cleanPhone(participant.contacto);
   if (participant.tipo_contacto === 'whatsapp' && phoneDigits.length >= 10) {
-    selfWaBtn.href = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(msg)}`;
+    selfWaBtn.href = `https://api.whatsapp.com/send?phone=${phoneDigits}&text=${encodeURIComponent(msg)}`;
   } else {
-    selfWaBtn.href = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    selfWaBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
   }
 }
 
@@ -410,33 +412,33 @@ function configureReminderButtons(participant) {
 
   // 1. Mensaje de WhatsApp para enviarse a sí mismo como recordatorio
   const waText =
-    `🎄 *Recordatorio Secreto: Intercambio de Pijamas Pachoncitas* 🧸\n\n` +
+    `✨ *Recordatorio Secreto: Intercambio de Pijamas Pachoncitas* ⛄\n\n` +
     `Hola ${participant.nombre}, aquí tienes los datos de la persona que te tocó:\n` +
-    `🎁 *Te toca regalarle a:* ${targetName}\n` +
-    `📏 *Talla de su pijama:* ${targetSize}\n` +
-    `🎨 *Color / Estampado favorito:* ${targetPattern}\n` +
-    `💰 *Presupuesto:* $300 MXN\n\n` +
-    `📅 *Fecha del evento:* ${eventDateText}\n` +
-    `📍 *Lugar:* ${eventLocation}\n` +
-    `🎥 *Video de la invitación:* ${videoUrl}`;
+    `⭐ *Te toca regalarle a:* ${targetName}\n` +
+    `➜ *Talla de su pijama:* ${targetSize}\n` +
+    `❤️ *Color / Estampado favorito:* ${targetPattern}\n` +
+    `✔️ *Presupuesto:* $300 MXN\n\n` +
+    `❄️ *Fecha del evento:* ${eventDateText}\n` +
+    `➜ *Lugar:* ${eventLocation}\n` +
+    `▶️ *Video de la invitación:* ${videoUrl}`;
 
   const waBtn = document.getElementById('btnSelfWhatsappReminder');
   const phoneDigits = cleanPhone(participant.contacto);
   if (participant.tipo_contacto === 'whatsapp' && phoneDigits.length >= 10) {
-    waBtn.href = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(waText)}`;
+    waBtn.href = `https://api.whatsapp.com/send?phone=${phoneDigits}&text=${encodeURIComponent(waText)}`;
   } else {
-    waBtn.href = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+    waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(waText)}`;
   }
 
   // 2. Enlace de Google Calendar
-  const gcalTitle = `🎄 Intercambio de Pijamas Pachoncitas ($300 MXN) - Regalo para ${targetName}`;
+  const gcalTitle = `✨ Intercambio de Pijamas Pachoncitas ($300 MXN) - Regalo para ${targetName}`;
   const gcalDetails =
     `¡No olvides llevar la pijama pachoncita para tu intercambio!\n\n` +
-    `🎁 Persona asignada: ${targetName}\n` +
-    `📏 Talla: ${targetSize}\n` +
-    `🎨 Color / Estampado favorito: ${targetPattern}\n` +
-    `💰 Presupuesto: $300 MXN\n` +
-    `🎥 Video de la invitación: ${videoUrl}`;
+    `⭐ Persona asignada: ${targetName}\n` +
+    `➜ Talla: ${targetSize}\n` +
+    `❤️ Color / Estampado favorito: ${targetPattern}\n` +
+    `✔️ Presupuesto: $300 MXN\n` +
+    `▶️ Video de la invitación: ${videoUrl}`;
 
   const startIso = (dbState.evento.fecha_evento_iso || '20261219T200000').replace(/[-:]/g, '');
   const endIso = (dbState.evento.fecha_evento_fin_iso || '20261219T235900').replace(/[-:]/g, '');
@@ -451,7 +453,7 @@ function configureReminderButtons(participant) {
   document.getElementById('btnGoogleCalendar').href = gcalUrl;
 
   // 3. Enlace de Correo Electrónico para sí mismo
-  const mailSubject = `🎄 Mi Intercambio de Pijamas Pachoncitas: Me tocó ${targetName}`;
+  const mailSubject = `✨ Mi Intercambio de Pijamas Pachoncitas: Me tocó ${targetName}`;
   const mailTo = participant.tipo_contacto === 'email' ? participant.contacto : '';
   document.getElementById('btnSelfEmailReminder').href =
     `mailto:${mailTo}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(waText)}`;
@@ -585,18 +587,18 @@ function renderAdminList() {
 
       const waPhone = cleanPhone(p.contacto);
       const individualWaMsg = p.asignado_nombre
-        ? `🎄 ¡Hola ${p.nombre}! Ya quedó listo el sorteo de nuestro *Intercambio de Pijamas Pachoncitas ($300 MXN)* 🧸✨\n\n` +
-          `🔑 *Tu Token:* ${p.token}\n` +
-          `🎁 *Te toca regalarle a:* *${p.asignado_nombre}*\n` +
-          `📏 *Talla:* ${p.asignado_talla}\n` +
-          `🎨 *Color/Estampado favorito:* ${p.asignado_color_estampado}\n\n` +
-          `🎥 *Video de la invitación:* ${dbState.evento.video_invitacion_url}\n` +
-          `🌐 *Consulta tu recordatorio y agrégalo a tu calendario aquí:* ${window.location.href.split('#')[0]}`
+        ? `✨ ¡Hola ${p.nombre}! Ya quedó listo el sorteo de nuestro *Intercambio de Pijamas Pachoncitas ($300 MXN)* ⛄\n\n` +
+          `✔️ *Tu Token:* ${p.token}\n` +
+          `⭐ *Te toca regalarle a:* *${p.asignado_nombre}*\n` +
+          `➜ *Talla:* ${p.asignado_talla}\n` +
+          `❤️ *Color/Estampado favorito:* ${p.asignado_color_estampado}\n\n` +
+          `▶️ *Video de la invitación:* ${dbState.evento.video_invitacion_url}\n` +
+          `❄️ *Consulta tu recordatorio y agrégalo a tu calendario aquí:* ${window.location.href.split('#')[0]}`
         : '';
 
       const waActionLink =
         p.asignado_nombre && waPhone.length >= 10
-          ? `<a href="https://wa.me/${waPhone}?text=${encodeURIComponent(individualWaMsg)}" target="_blank" style="color:#16a34a; font-weight:700; text-decoration:none; font-size:0.76rem;">📲 Enviar WA</a>`
+          ? `<a href="https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(individualWaMsg)}" target="_blank" style="color:#16a34a; font-weight:700; text-decoration:none; font-size:0.76rem;">📲 Enviar WA</a>`
           : '';
 
       return `

@@ -76,17 +76,17 @@ def construir_mensaje(participante: dict, evento: dict) -> str:
     fecha_evento = evento.get("fecha_evento_texto", "Diciembre 2026")
 
     mensaje = (
-        f"🎄 *¡Hola {nombre}!* 🧸✨\n\n"
+        f"✨ *¡Hola {nombre}!* ⛄❄️\n\n"
         f"Ya todos contestaron el registro de nuestro *Intercambio Navideño de Pijamas Pachoncitas* "
         f"(Presupuesto: *${presupuesto} MXN*).\n\n"
-        f"🤫 *AQUÍ ESTÁ TU PERSONA ASIGNADA (¡Es secreto!):*\n"
-        f"🎁 *Te toca regalarle a:* *{asignado}*\n"
-        f"📏 *Talla de su pijama:* {talla}\n"
-        f"🎨 *Color / Estampado favorito:* {estampado}\n\n"
-        f"🔑 *Tu Token personal:* `{token}`\n"
-        f"📅 *Fecha del intercambio:* {fecha_evento}\n\n"
-        f"🎥 *Mira el video de la invitación aquí:*\n{video_url}\n\n"
-        f"📲 *Agrega el recordatorio a tu calendario o consulta tus datos en la página con tu Nombre y Token:*\n{sitio_url}"
+        f"⭐ *AQUÍ ESTÁ TU PERSONA ASIGNADA (¡Es secreto!):*\n"
+        f"➜ *Te toca regalarle a:* *{asignado}*\n"
+        f"➜ *Talla de su pijama:* {talla}\n"
+        f"❤️ *Color / Estampado favorito:* {estampado}\n\n"
+        f"✔️ *Tu Token personal:* `{token}`\n"
+        f"❄️ *Fecha del intercambio:* {fecha_evento}\n\n"
+        f"▶️ *Mira el video de la invitación aquí:*\n{video_url}\n\n"
+        f"✨ *Agrega el recordatorio a tu calendario o consulta tus datos en la página con tu Nombre y Token:*\n{sitio_url}"
     )
     return mensaje
 
