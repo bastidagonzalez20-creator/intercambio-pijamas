@@ -1,0 +1,83 @@
+name: Deploy Intercambio to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generar env.config seguro (con Hash SHA-256 para ADMIN_PIN)
+        env:
+          ENV_FILE_SECRET: ${{ secrets.ENV_FILE }}
+          CLOUD_DB_URL: ${{ secrets.CLOUD_DB_URL || vars.CLOUD_DB_URL }}
+          CLOUD_DB_OBJECT_NAME: ${{ secrets.CLOUD_DB_OBJECT_NAME || vars.CLOUD_DB_OBJECT_NAME }}
+          ADMIN_PIN: ${{ secrets.ADMIN_PIN || vars.ADMIN_PIN }}
+          MIN_PARTICIPANTES: ${{ secrets.MIN_PARTICIPANTES || vars.MIN_PARTICIPANTES }}
+          MAX_PARTICIPANTES: ${{ secrets.MAX_PARTICIPANTES || vars.MAX_PARTICIPANTES }}
+          AUTO_SORTEO_AL_MAX: ${{ secrets.AUTO_SORTEO_AL_MAX || vars.AUTO_SORTEO_AL_MAX }}
+          PERMITIR_REGISTRO_EXTRA: ${{ secrets.PERMITIR_REGISTRO_EXTRA || vars.PERMITIR_REGISTRO_EXTRA }}
+          PRESUPUESTO_MXN: ${{ secrets.PRESUPUESTO_MXN || vars.PRESUPUESTO_MXN }}
+          FECHA_EVENTO_TEXTO: ${{ secrets.FECHA_EVENTO_TEXTO || vars.FECHA_EVENTO_TEXTO }}
+          LUGAR_EVENTO: ${{ secrets.LUGAR_EVENTO || vars.LUGAR_EVENTO }}
+          SITIO_WEB_URL: ${{ secrets.SITIO_WEB_URL || vars.SITIO_WEB_URL }}
+        run: |
+          if [ -n "$ENV_FILE_SECRET" ]; then
+            printf "%s\n" "$ENV_FILE_SECRET" > .env.tmp
+          else
+            cp .env.example .env.tmp
+          fi
+
+          if [ -n "$CLOUD_DB_URL" ]; then sed -i "s|^CLOUD_DB_URL=.*|CLOUD_DB_URL=$CLOUD_DB_URL|" .env.tmp; fi
+          if [ -n "$CLOUD_DB_OBJECT_NAME" ]; then sed -i "s|^CLOUD_DB_OBJECT_NAME=.*|CLOUD_DB_OBJECT_NAME=$CLOUD_DB_OBJECT_NAME|" .env.tmp; fi
+          if [ -n "$ADMIN_PIN" ]; then sed -i "s|^ADMIN_PIN=.*|ADMIN_PIN=$ADMIN_PIN|" .env.tmp; fi
+          if [ -n "$MIN_PARTICIPANTES" ]; then sed -i "s|^MIN_PARTICIPANTES=.*|MIN_PARTICIPANTES=$MIN_PARTICIPANTES|" .env.tmp; fi
+          if [ -n "$MAX_PARTICIPANTES" ]; then sed -i "s|^MAX_PARTICIPANTES=.*|MAX_PARTICIPANTES=$MAX_PARTICIPANTES|" .env.tmp; fi
+          if [ -n "$AUTO_SORTEO_AL_MAX" ]; then sed -i "s|^AUTO_SORTEO_AL_MAX=.*|AUTO_SORTEO_AL_MAX=$AUTO_SORTEO_AL_MAX|" .env.tmp; fi
+          if [ -n "$PERMITIR_REGISTRO_EXTRA" ]; then sed -i "s|^PERMITIR_REGISTRO_EXTRA=.*|PERMITIR_REGISTRO_EXTRA=$PERMITIR_REGISTRO_EXTRA|" .env.tmp; fi
+          if [ -n "$PRESUPUESTO_MXN" ]; then sed -i "s|^PRESUPUESTO_MXN=.*|PRESUPUESTO_MXN=$PRESUPUESTO_MXN|" .env.tmp; fi
+          if [ -n "$FECHA_EVENTO_TEXTO" ]; then sed -i "s|^FECHA_EVENTO_TEXTO=.*|FECHA_EVENTO_TEXTO=$FECHA_EVENTO_TEXTO|" .env.tmp; fi
+          if [ -n "$LUGAR_EVENTO" ]; then sed -i "s|^LUGAR_EVENTO=.*|LUGAR_EVENTO=$LUGAR_EVENTO|" .env.tmp; fi
+          if [ -n "$SITIO_WEB_URL" ]; then sed -i "s|^SITIO_WEB_URL=.*|SITIO_WEB_URL=$SITIO_WEB_URL|" .env.tmp; fi
+
+          # Extraer ADMIN_PIN, calcular su hash SHA-256 con sal y BORRAR el PIN en texto plano del archivo público
+          RAW_PIN=$(grep '^ADMIN_PIN=' .env.tmp | cut -d'=' -f2- | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          if [ -n "$RAW_PIN" ] && [ "$RAW_PIN" != "TU_PIN_SECRETO" ]; then
+            PIN_HASH=$(printf "navidad_pijamas_2026:%s" "$RAW_PIN" | sha256sum | awk '{print $1}')
+            sed -i '/^ADMIN_PIN=/d' .env.tmp
+            echo "ADMIN_PIN_HASH=$PIN_HASH" >> .env.tmp
+          else
+            sed -i '/^ADMIN_PIN=/d' .env.tmp
+          fi
+
+          mv .env.tmp env.config
+          rm -f .env .env.example enviar_whatsapp.py server.js 1_iniciar_sitio.bat 2_enviar_whatsapps.bat
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

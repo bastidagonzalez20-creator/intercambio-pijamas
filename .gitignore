@@ -1,0 +1,6 @@
+/.env
+/env.config
+/bd_intercambio.json
+/bd_intercambio_pijamas.csv
+/__pycache__/
+*.pyc
