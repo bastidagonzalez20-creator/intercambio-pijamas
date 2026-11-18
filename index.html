@@ -6,7 +6,7 @@
   <title>🎄 Intercambio de Pijamas Pachoncitas | Navidad $300 MXN</title>
   <meta name="description" content="Regístrate en nuestro Intercambio Navideño de Pijamas Pachoncitas ($300 MXN). Anota tu talla, color o estampado favorito y obtén tu token." />
   <meta property="og:title" content="🎄 Intercambio de Pijamas Pachoncitas" />
-  <meta property="og:description" content="Suaves, calientitas y con mucho espíritu navideño: ¡regístrate y descubre quién te toca este viernes 20 de noviembre!" />
+  <meta property="og:description" content="Suaves, calientitas y con mucho espíritu navideño: ¡regístrate y descubre quién te toca este lunes 22 de noviembre!" />
   <meta property="og:image" content="assets/hero-pijamas.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,7 +51,7 @@
             <div class="progress-fill" id="progressBarFill"></div>
           </div>
           <p class="progress-subtext" id="progressSubtext">
-            Cuando todos los participantes se registren se realizará el sorteo. Resultados: <strong>Viernes 20 de noviembre</strong>.
+            Cuando todos los participantes se registren se realizará el sorteo. Resultados: <strong>Lunes 22 de noviembre</strong>.
           </p>
         </div>
       </div>
@@ -183,7 +183,7 @@
           <strong>⏳ ¿Qué sigue ahora?</strong><br />
           Por favor <strong>espera a que todos los participantes terminen de contestar</strong>.<br /><br />
           📲 En cuanto esté completo el registro, <strong>recibirás la información de quién te toca en tu medio de contacto proporcionado</strong> (<span id="confirmUserContact"></span>).<br /><br />
-          📅 También podrás consultarlo aquí mismo el día <strong>viernes 20 de noviembre</strong> ingresando tu <strong>Nombre</strong> y tu <strong>Token</strong> en la pestaña <em>“¿Quién me tocó?”</em>.
+          📅 También podrás consultarlo aquí mismo el día <strong>lunes 22 de noviembre</strong> ingresando tu <strong>Nombre</strong> y tu <strong>Token</strong> en la pestaña <em>“¿Quién me tocó?”</em>.
         </div>
 
         <div class="action-stack">
@@ -191,7 +191,7 @@
             💬 Guardarme mi Token en mi WhatsApp
           </a>
           <button type="button" class="btn-secondary" onclick="switchTab('lookup')">
-            🔍 Ir a la pestaña de Consulta (Viernes 20 Nov)
+            🔍 Ir a la pestaña de Consulta (Lunes 22 Nov)
           </button>
           <button type="button" class="btn-secondary" onclick="resetRegistrationView()" style="border-color:#d1d5db; color:#6b7280;">
             ➕ Registrar a otra persona desde este celular
@@ -220,11 +220,11 @@
       </div>
     </section>
 
-    <!-- TAB 2: LOOKUP RESULT (VIERNES 20 DE NOVIEMBRE) -->
+    <!-- TAB 2: LOOKUP RESULT (LUNES 22 DE NOVIEMBRE) -->
     <section class="content-card hidden" id="sectionLookup">
       <h2 class="section-title">Descubre quién te tocó 🎁</h2>
       <p class="section-subtitle">
-        Consulta disponible a partir del <strong>viernes 20 de noviembre</strong> (o en cuanto todos hayan contestado). Ingresa tu <strong>Nombre</strong> y el <strong>Token</strong> que te dimos al registrarte.
+        Consulta disponible a partir del <strong>lunes 22 de noviembre</strong> (o en cuanto todos hayan contestado). Ingresa tu <strong>Nombre</strong> y el <strong>Token</strong> que te dimos al registrarte.
       </p>
 
       <form id="lookupForm" onsubmit="handleLookupSubmit(event)">
@@ -260,7 +260,7 @@
       <div id="lookupPendingNotice" class="notice-card hidden" style="margin-top:18px;">
         <strong>🎄 ¡Hola <span id="pendingUserName"></span>! Tu Token es válido.</strong><br />
         Todavía estamos esperando a que terminen de registrarse todos los participantes (<strong id="pendingCountStatus"></strong>).<br /><br />
-        Recibirás un mensaje en tu medio de contacto en cuanto se cierre el registro, o vuelve a consultar aquí el <strong>viernes 20 de noviembre</strong>.
+        Recibirás un mensaje en tu medio de contacto en cuanto se cierre el registro, o vuelve a consultar aquí el <strong>lunes 22 de noviembre</strong>.
       </div>
 
       <!-- Result Card when Draw is Ready -->

@@ -35,8 +35,8 @@ let dbState = {
     presupuesto_mxn: 300,
     min_participantes: 13,
     max_participantes: 20,
-    fecha_revelacion: '2026-11-20',
-    fecha_revelacion_texto: 'viernes 20 de noviembre',
+    fecha_revelacion: '2026-11-22',
+    fecha_revelacion_texto: 'lunes 22 de noviembre',
     fecha_evento_iso: '20261224T170000',
     fecha_evento_fin_iso: '20261224T235900',
     fecha_evento_texto: '24 de diciembre | Desde las 5:00 PM',
@@ -137,13 +137,19 @@ function applyEnvToState() {
   if (env.PRESUPUESTO_MXN) dbState.evento.presupuesto_mxn = parseInt(env.PRESUPUESTO_MXN, 10) || 300;
   if (env.TITULO_EVENTO) dbState.evento.titulo = env.TITULO_EVENTO;
   if (env.FRASE_EVENTO) dbState.evento.frase = env.FRASE_EVENTO;
-  if (env.FECHA_REVELACION && env.FECHA_REVELACION !== '2026-11-16') {
+  if (env.FECHA_REVELACION && env.FECHA_REVELACION !== '2026-11-16' && env.FECHA_REVELACION !== '2026-11-20') {
     dbState.evento.fecha_revelacion = env.FECHA_REVELACION;
+  } else {
+    dbState.evento.fecha_revelacion = '2026-11-22';
   }
-  if (env.FECHA_REVELACION_TEXTO && !env.FECHA_REVELACION_TEXTO.toLowerCase().includes('16 de noviembre')) {
+  if (
+    env.FECHA_REVELACION_TEXTO &&
+    !env.FECHA_REVELACION_TEXTO.toLowerCase().includes('16 de noviembre') &&
+    !env.FECHA_REVELACION_TEXTO.toLowerCase().includes('20 de noviembre')
+  ) {
     dbState.evento.fecha_revelacion_texto = env.FECHA_REVELACION_TEXTO;
   } else {
-    dbState.evento.fecha_revelacion_texto = 'viernes 20 de noviembre';
+    dbState.evento.fecha_revelacion_texto = 'lunes 22 de noviembre';
   }
   if (env.FECHA_EVENTO_TEXTO && !env.FECHA_EVENTO_TEXTO.includes('14 de diciembre')) {
     dbState.evento.fecha_evento_texto = env.FECHA_EVENTO_TEXTO;
@@ -434,12 +440,12 @@ async function saveDatabase(onlyIndex = null) {
   return true;
 }
 
-// Actualizar barra de progreso y enlaces de video
+// Actualizar barra de progreso
 function renderProgressAndSettings() {
   const total = dbState.participantes.length;
   const max = dbState.evento.max_participantes || 20;
   const pct = Math.min(100, Math.round((total / max) * 100));
-  const fechaRevTexto = dbState.evento.fecha_revelacion_texto || 'viernes 20 de noviembre';
+  const fechaRevTexto = dbState.evento.fecha_revelacion_texto || 'lunes 22 de noviembre';
 
   document.getElementById('progressCountText').textContent = `${total} de ${max}`;
   document.getElementById('progressBarFill').style.width = `${pct}%`;
@@ -706,7 +712,7 @@ function showTokenConfirmation(participant) {
     `✔️ *Mi Token Secreto:* ${participant.token}\n` +
     `➜ *Mi Talla:* ${participant.talla}\n` +
     `❤️ *Color/Estampado pedido:* ${participant.color_estampado}\n\n` +
-    `❄️ *Consulta de resultados:* Viernes 20 de noviembre\n` +
+    `❄️ *Consulta de resultados:* Lunes 22 de noviembre\n` +
     `▶️ *Sitio web:* ${window.location.href.split('#')[0]}\n\n`;
 
   const phoneDigits = cleanPhone(participant.contacto);
