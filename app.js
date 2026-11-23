@@ -37,9 +37,9 @@ let dbState = {
     max_participantes: 20,
     fecha_revelacion: '2026-11-23',
     fecha_revelacion_texto: 'lunes 23 de noviembre',
-    fecha_evento_iso: '20261224T170000',
-    fecha_evento_fin_iso: '20261224T235900',
-    fecha_evento_texto: '24 de diciembre | Desde las 5:00 PM',
+    fecha_evento_iso: '20261212T170000',
+    fecha_evento_fin_iso: '20261212T235900',
+    fecha_evento_texto: '12 de diciembre | Desde las 5:00 PM',
     lugar_evento: 'Cena Navideña e Intercambio',
     sitio_web_url: window.location.href.split('#')[0],
     sorteo_realizado: false,
@@ -157,25 +157,55 @@ function applyEnvToState() {
   } else {
     dbState.evento.fecha_revelacion_texto = 'lunes 23 de noviembre';
   }
-  if (env.FECHA_EVENTO_TEXTO && !env.FECHA_EVENTO_TEXTO.includes('14 de diciembre')) {
+  if (
+    env.FECHA_EVENTO_TEXTO &&
+    !env.FECHA_EVENTO_TEXTO.includes('14 de diciembre') &&
+    !env.FECHA_EVENTO_TEXTO.includes('24 de diciembre') &&
+    !env.FECHA_EVENTO_TEXTO.includes('24 de Diciembre')
+  ) {
     dbState.evento.fecha_evento_texto = env.FECHA_EVENTO_TEXTO;
   } else {
-    dbState.evento.fecha_evento_texto = '24 de diciembre | Desde las 5:00 PM';
+    dbState.evento.fecha_evento_texto = '12 de diciembre | Desde las 5:00 PM';
   }
-  if (env.FECHA_EVENTO_ISO && env.FECHA_EVENTO_ISO !== '20261214T170000') {
+  if (
+    env.FECHA_EVENTO_ISO &&
+    env.FECHA_EVENTO_ISO !== '20261214T170000' &&
+    env.FECHA_EVENTO_ISO !== '20261224T170000'
+  ) {
     dbState.evento.fecha_evento_iso = env.FECHA_EVENTO_ISO;
   } else {
-    dbState.evento.fecha_evento_iso = '20261224T170000';
+    dbState.evento.fecha_evento_iso = '20261212T170000';
   }
-  if (env.FECHA_EVENTO_FIN_ISO && env.FECHA_EVENTO_FIN_ISO !== '20261214T235900') {
+  if (
+    env.FECHA_EVENTO_FIN_ISO &&
+    env.FECHA_EVENTO_FIN_ISO !== '20261214T235900' &&
+    env.FECHA_EVENTO_FIN_ISO !== '20261224T235900'
+  ) {
     dbState.evento.fecha_evento_fin_iso = env.FECHA_EVENTO_FIN_ISO;
   } else {
-    dbState.evento.fecha_evento_fin_iso = '20261224T235900';
+    dbState.evento.fecha_evento_fin_iso = '20261212T235900';
   }
   if (env.LUGAR_EVENTO) dbState.evento.lugar_evento = env.LUGAR_EVENTO;
   if (env.SITIO_WEB_URL && !env.SITIO_WEB_URL.includes('tu-usuario')) {
     dbState.evento.sitio_web_url = env.SITIO_WEB_URL;
   }
+}
+
+// Detectar Enlace Mágico (?nombre=...&token=...) y abrir resultado automáticamente
+async function checkUrlMagicLink() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const urlNombre = (params.get('nombre') || '').trim();
+    const urlToken = (params.get('token') || '').trim().toUpperCase();
+    if (urlNombre && urlToken) {
+      switchTab('lookup');
+      const inputNombre = document.getElementById('lookupNombre');
+      const inputToken = document.getElementById('lookupToken');
+      if (inputNombre) inputNombre.value = urlNombre;
+      if (inputToken) inputToken.value = urlToken;
+      await handleLookupSubmit({ preventDefault() {} });
+    }
+  } catch (_) {}
 }
 
 // Inicialización al cargar la página
@@ -190,6 +220,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadDatabase();
   applyEnvToState();
   renderProgressAndSettings();
+  await checkUrlMagicLink();
 });
 
 // Copos de nieve decorativos
@@ -823,7 +854,7 @@ function configureReminderButtons(participant) {
   const targetName = participant.asignado_nombre;
   const targetSize = participant.asignado_talla;
   const targetPattern = participant.asignado_color_estampado;
-  const eventDateText = dbState.evento.fecha_evento_texto || '24 de diciembre | Desde las 5:00 PM';
+  const eventDateText = dbState.evento.fecha_evento_texto || '12 de diciembre | Desde las 5:00 PM';
   const eventLocation = dbState.evento.lugar_evento || 'Cena Navideña e Intercambio';
 
   // 1. Mensaje de WhatsApp para enviarse a sí mismo como recordatorio
@@ -858,8 +889,8 @@ function configureReminderButtons(participant) {
     `Lo que habrá: Habrá regalos, azulitos de dudosa procedencia, mucha comida y ensalada de manzana.\n` +
     `Requisitos: Traer tu regalo del intercambio. ¡No faltes!`;
 
-  const startIso = (dbState.evento.fecha_evento_iso || '20261224T170000').replace(/[-:]/g, '');
-  const endIso = (dbState.evento.fecha_evento_fin_iso || '20261224T235900').replace(/[-:]/g, '');
+  const startIso = (dbState.evento.fecha_evento_iso || '20261212T170000').replace(/[-:]/g, '');
+  const endIso = (dbState.evento.fecha_evento_fin_iso || '20261212T235900').replace(/[-:]/g, '');
 
   const gcalUrl =
     `https://calendar.google.com/calendar/render?action=TEMPLATE` +
@@ -881,8 +912,8 @@ function configureReminderButtons(participant) {
 function downloadICSFile() {
   if (!currentLookupResult) return;
   const p = currentLookupResult;
-  const startIso = (dbState.evento.fecha_evento_iso || '20261224T170000').replace(/[-:]/g, '');
-  const endIso = (dbState.evento.fecha_evento_fin_iso || '20261224T235900').replace(/[-:]/g, '');
+  const startIso = (dbState.evento.fecha_evento_iso || '20261212T170000').replace(/[-:]/g, '');
+  const endIso = (dbState.evento.fecha_evento_fin_iso || '20261212T235900').replace(/[-:]/g, '');
 
   const description =
     `Persona que te toco: ${p.asignado_nombre}\\n` +
@@ -1002,22 +1033,19 @@ function renderAdminList() {
     return;
   }
 
+  const baseSiteUrl = window.location.origin + window.location.pathname;
   container.innerHTML = dbState.participantes
     .map((p, i) => {
       const assignedBadge = p.asignado_nombre
-        ? `<span style="color:#166534; font-weight:700;">➔ Regala a: ${p.asignado_nombre} (${p.asignado_talla})</span>`
+        ? `<span style="color:#166534; font-weight:700;">➔ Sorteo asignado 🤫 (Sin spoilers)</span>`
         : `<span style="color:#9ca3af;">Sorteo pendiente</span>`;
 
       const waPhone = cleanPhone(p.contacto);
+      const magicUrl = `${baseSiteUrl}?nombre=${encodeURIComponent(p.nombre)}&token=${encodeURIComponent(p.token)}`;
       const individualWaMsg = p.asignado_nombre
-        ? `🎄✨ ¡Hola *${p.nombre}*! Los duendes ya hicieron su magia y tenemos los resultados del *Intercambio de Pijamas Pachoncitas* 🧸💤\n\n` +
-          `🤫 _Guarda bien el secreto..._\n` +
-          `🎁 *Te tocó regalarle a:* *${p.asignado_nombre}*\n` +
-          `📏 *Talla:* ${p.asignado_talla}\n` +
-          `🎨 *Color/Estampado fav:* ${p.asignado_color_estampado}\n` +
-          `🔑 *Tu Token:* \`${p.token}\`\n\n` +
-          `🥂 *¡NOS VEMOS EN LA CENA NAVIDEÑA!* 🎅\n` +
-          `📲 *Guarda el evento en tu calendario y consulta los detalles aquí:*\n${window.location.href.split('#')[0]}`
+        ? `¡Hola ${p.nombre}! Los duendes ya hicieron su magia y tenemos los resultados del Intercambio de Pijamas 🧸💤\n` +
+          `🔑 Tu Token es: ${p.token} 🎁 Toca tu enlace secreto para descubrir en la página a quién te tocó regalarle: ${magicUrl}\n` +
+          `🥂 ¡NOS VEMOS EN LA CENA NAVIDEÑA! 🎅`
         : '';
 
       const waActionLink =

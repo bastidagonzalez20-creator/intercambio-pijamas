@@ -289,32 +289,20 @@ def realizar_sorteo_ciclico(participantes: list) -> None:
 
 
 def construir_mensaje(participante: dict, evento: dict) -> str:
-    """Construye el mensaje personalizado de WhatsApp para cada participante."""
+    """Construye el mensaje personalizado de WhatsApp con Enlace Mágico (sin spoilers en tu chat)."""
     nombre = participante.get("nombre", "Participante")
     token = participante.get("token", "PIJAMA-0000")
-    asignado = participante.get("asignado_nombre", "Por asignar")
-    talla = participante.get("asignado_talla", "Por confirmar")
-    estampado = participante.get("asignado_color_estampado", "Sorpresa navideña")
-    presupuesto = evento.get("presupuesto_mxn", ENV_VARS.get("PRESUPUESTO_MXN", 300))
     sitio_url = evento.get(
         "sitio_web_url",
         ENV_VARS.get("SITIO_WEB_URL", "https://bastidagonzalez20-creator.github.io/intercambio-pijamas/"),
     )
+    sitio_base = sitio_url.split("?")[0].rstrip("/") + "/"
+    magic_url = f"{sitio_base}?nombre={urllib.parse.quote(nombre)}&token={urllib.parse.quote(token)}"
 
     mensaje = (
-        f"✨ *¡Hola {nombre}!* ⛄❄️\n\n"
-        f"Ya todos contestaron el registro de nuestro *Intercambio Navideño de Pijamas Pachoncitas* "
-        f"(Presupuesto: *${presupuesto} MXN*).\n\n"
-        f"⭐ *AQUÍ ESTÁ TU PERSONA ASIGNADA (¡Es secreto!):*\n"
-        f"➜ *Te toca regalarle a:* *{asignado}*\n"
-        f"➜ *Talla de su pijama:* {talla}\n"
-        f"❤️ *Color / Estampado favorito:* {estampado}\n\n"
-        f"✔️ *Tu Token personal:* `{token}`\n\n"
-        f"✨ *¡FELIZ NAVIDAD! ¡ESTÁS INVITADOOOO A NUESTRA CENA NAVIDEÑA!* ⛄\n"
-        f"➜ *Lo que habrá:* Habrá regalos, azulitos de dudosa procedencia, mucha comida y ensalada de manzana (que esperemos que sí llegue este año).\n"
-        f"❄️ *Fecha y hora:* 24 de diciembre | Desde las 5:00 PM\n"
-        f"✔️ *Requisitos:* Traer tu regalo del intercambio. ¡No faltes!\n\n"
-        f"▶️ *Agrega el recordatorio a tu calendario o consulta tus datos en la página con tu Nombre y Token:*\n{sitio_url}"
+        f"¡Hola {nombre}! Los duendes ya hicieron su magia y tenemos los resultados del Intercambio de Pijamas 🧸💤\n"
+        f"🔑 Tu Token es: {token} 🎁 Toca tu enlace secreto para descubrir en la página a quién te tocó regalarle: {magic_url}\n"
+        f"🥂 ¡NOS VEMOS EN LA CENA NAVIDEÑA! 🎅"
     )
     return mensaje
 
@@ -376,7 +364,7 @@ def main():
     print(f"📋 Total de participantes listos para envío: {len(participantes)}")
     print("-" * 72)
     for idx, p in enumerate(participantes, start=1):
-        print(f"  {idx:02d}. {p.get('nombre')} ({p.get('contacto')}) | Token: {p.get('token')} -> Regala a: {p.get('asignado_nombre')}")
+        print(f"  {idx:02d}. {p.get('nombre')} ({p.get('contacto')}) | Token: {p.get('token')} -> Enlace secreto listo 🤫 (Sin spoilers)")
     print("-" * 72)
 
     if args.modo:
