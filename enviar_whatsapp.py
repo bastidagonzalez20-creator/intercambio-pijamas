@@ -370,35 +370,74 @@ def main():
     if args.modo:
         modo = args.modo
     else:
-        print("\nModos de envío desde tu WhatsApp de Escritorio:")
-        print("  [1] Automático (abre cada chat en WhatsApp Desktop y presiona ENTER solo)")
-        print("  [2] Asistido (abre cada chat con el mensaje escrito y espera a que tú des ENTER)")
-        modo = input("\nElige una opción (1 o 2) [Por defecto 1]: ").strip() or "1"
+        print("\nModos de envío:")
+        print("  [1] WhatsApp Automático + Abrir Correos (presiona ENTER solo en WhatsApp)")
+        print("  [2] WhatsApp Asistido + Abrir Correos (espera a que tú des ENTER)")
+        print("  [3] SOLO enviar a los que pusieron Correo Electrónico (sin reenviar WhatsApps)")
+        modo = input("\nElige una opción (1, 2 o 3) [Por defecto 1]: ").strip() or "1"
 
     auto_enter = modo == "1"
+    solo_correos = modo == "3"
 
-    print("\n⚠️ IMPORTANTE: Ten abierta tu app de WhatsApp en tu PC. Comenzando en 4 segundos...")
-    time.sleep(4)
+    if not solo_correos:
+        print("\n⚠️ IMPORTANTE: Ten abierta tu app de WhatsApp en tu PC. Comenzando en 4 segundos...")
+        time.sleep(4)
 
-    enviados = 0
+    enviados_wa = 0
+    correos_pendientes = []
+
     for idx, p in enumerate(participantes, start=1):
-        contacto = p.get("contacto", "")
-        telefono = limpiar_telefono(contacto, args.codigo_pais)
+        contacto = (p.get("contacto") or "").strip()
+        mensaje = construir_mensaje(p, evento)
 
-        if len(telefono) < 10:
-            print(f"⏭️ [{idx}/{len(participantes)}] {p.get('nombre')}: El contacto '{contacto}' es correo o no tiene 10 dígitos. Saltando WhatsApp...")
+        if "@" in contacto:
+            correos_pendientes.append((p.get("nombre", "Participante"), contacto, mensaje))
             continue
 
-        mensaje = construir_mensaje(p, evento)
-        print(f"📲 [{idx}/{len(participantes)}] Enviando a {p.get('nombre')} (+{telefono})...")
+        if solo_correos:
+            continue
+
+        telefono = limpiar_telefono(contacto, args.codigo_pais)
+        if len(telefono) < 10:
+            print(f"⏭️ [{idx}/{len(participantes)}] {p.get('nombre')}: Contacto '{contacto}' inválido. Saltando...")
+            continue
+
+        print(f"📲 [{idx}/{len(participantes)}] Enviando WhatsApp a {p.get('nombre')} (+{telefono})...")
         enviar_por_whatsapp_desktop(telefono, mensaje, auto_enter=auto_enter, espera=args.espera)
-        enviados += 1
+        enviados_wa += 1
 
         if not auto_enter:
             input("   👉 Presiona ENTER en esta consola cuando hayas enviado el mensaje en WhatsApp para pasar al siguiente...")
 
+    # Procesar los participantes que dejaron Correo Electrónico
+    if correos_pendientes:
+        ruta_txt = os.path.join(BASE_DIR, "correos_para_enviar.txt")
+        with open(ruta_txt, "w", encoding="utf-8") as f_txt:
+            for nombre_c, email_c, msg_c in correos_pendientes:
+                f_txt.write(f"PARA: {email_c} ({nombre_c})\n")
+                f_txt.write("ASUNTO: 🎄 Resultados del Intercambio de Pijamas Pachoncitas 🧸\n")
+                f_txt.write(f"MENSAJE:\n{msg_c}\n")
+                f_txt.write("-" * 70 + "\n\n")
+
+        print("\n" + "=" * 72)
+        print(f"✉️  SE ENCONTRARON {len(correos_pendientes)} REGISTRO(S) CON CORREO ELECTRÓNICO:")
+        print("=" * 72)
+        for i_c, (nombre_c, email_c, msg_c) in enumerate(correos_pendientes, start=1):
+            print(f"\n--- Correo #{i_c}: {nombre_c} <{email_c}> ---")
+            print(msg_c)
+            asunto = urllib.parse.quote("🎄 Resultados del Intercambio de Pijamas Pachoncitas 🧸")
+            cuerpo = urllib.parse.quote(msg_c)
+            mailto_uri = f"mailto:{email_c}?subject={asunto}&body={cuerpo}"
+            try:
+                os.startfile(mailto_uri)
+            except Exception:
+                pass
+
+        print("\n" + "-" * 72)
+        print(f"📄 También te guardé los textos listos para copiar y pegar en:\n   {ruta_txt}")
+
     print("\n" + "=" * 72)
-    print(f"🎉 ¡Listo! Se procesaron {enviados} mensajes en tu WhatsApp de Escritorio.")
+    print(f"🎉 ¡Listo! WhatsApps procesados: {enviados_wa} | Correos procesados: {len(correos_pendientes)}")
     print("=" * 72)
 
 

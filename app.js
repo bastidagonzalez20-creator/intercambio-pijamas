@@ -1048,10 +1048,20 @@ function renderAdminList() {
           `🥂 ¡NOS VEMOS EN LA CENA NAVIDEÑA! 🎅`
         : '';
 
-      const waActionLink =
-        p.asignado_nombre && waPhone.length >= 10
-          ? `<a href="https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(individualWaMsg)}" target="_blank" style="color:#16a34a; font-weight:700; text-decoration:none; font-size:0.76rem;">📲 Enviar WA</a>`
-          : '';
+      const isEmail = (p.contacto || '').includes('@');
+      const mailSubject = '🎄 Resultados del Intercambio de Pijamas Pachoncitas 🧸';
+      let contactActionLink = '';
+      if (p.asignado_nombre) {
+        if (isEmail) {
+          const mailtoHref = `mailto:${encodeURIComponent(p.contacto.trim())}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(individualWaMsg)}`;
+          const gmailHref = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(p.contacto.trim())}&su=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(individualWaMsg)}`;
+          contactActionLink =
+            `<a href="${mailtoHref}" style="color:#2563eb; font-weight:700; text-decoration:none; font-size:0.76rem;">✉️ Enviar Correo</a>` +
+            `<a href="${gmailHref}" target="_blank" style="color:#dc2626; font-weight:700; text-decoration:none; font-size:0.74rem;">📧 Abrir Gmail</a>`;
+        } else if (waPhone.length >= 10) {
+          contactActionLink = `<a href="https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(individualWaMsg)}" target="_blank" style="color:#16a34a; font-weight:700; text-decoration:none; font-size:0.76rem;">📲 Enviar WA</a>`;
+        }
+      }
 
       return `
         <div class="participant-item">
@@ -1062,7 +1072,7 @@ function renderAdminList() {
             ${assignedBadge}
           </div>
           <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
-            ${waActionLink}
+            ${contactActionLink}
             <button type="button" onclick="deleteParticipant('${p.id}')" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:0.75rem;">Eliminar</button>
           </div>
         </div>

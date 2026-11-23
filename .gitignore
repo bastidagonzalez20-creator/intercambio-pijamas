@@ -2,5 +2,6 @@
 /env.config
 /bd_intercambio.json
 /bd_intercambio_pijamas.csv
+/correos_para_enviar.txt
 /__pycache__/
 *.pyc
